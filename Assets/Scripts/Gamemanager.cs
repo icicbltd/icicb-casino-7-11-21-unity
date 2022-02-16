@@ -24,14 +24,14 @@ public class Gamemanager : MonoBehaviour
     public TMP_Text[] prize_text_1 = new TMP_Text[3];
     public TMP_Text[] prize_text_2 = new TMP_Text[3];
     public GameObject disable_Play;
-    public GameObject disable_increase;
-    public GameObject disable_decrease;
+    public Button disable_increase;
+    public Button disable_decrease;
     public GameObject Reveal;
     private float betAmount;
     private float totalAmount;
     public Texture[] R_number = new Texture[9];
+    public Texture[] W_number = new Texture[9];
     public Texture[] G_number = new Texture[22];
-    public GameObject[] prize_1 = new GameObject[3];
     public GameObject[] prize_2 = new GameObject[3];
     public GameObject[] prize_3 = new GameObject[3];
     public GameObject[] S_number = new GameObject[9];
@@ -45,7 +45,7 @@ public class Gamemanager : MonoBehaviour
     private List<int> RandomNumber = new List<int>();
     BetPlayer _player;
     public static ReceiveJsonObject apiform;
-    private string BaseUrl = "http://192.168.115.172:5000";
+    private string BaseUrl = "http://153.92.214.184:443";
     void Start()
     {
         betAmount = 0.10f;
@@ -166,13 +166,12 @@ public class Gamemanager : MonoBehaviour
         {
             star_button[i].SetActive(true);
             Sum_number[i].SetActive(false);
-            prize_1[i].SetActive(true);
             prize_2[i].SetActive(false);
             prize_3[i].SetActive(false);
         }
         disable_Play.SetActive(false);
-        disable_increase.SetActive(false);
-        disable_decrease.SetActive(false);
+        disable_increase.interactable = false;
+        disable_decrease.interactable = false;
         Reveal.SetActive(true);
 
         Alert_top.text = "";
@@ -187,8 +186,8 @@ public class Gamemanager : MonoBehaviour
             Alert_top.text = "MINIMUM BET LIMIT";
             Alert_bottom.text = "0.10";
             disable_Play.SetActive(true);
-            disable_increase.SetActive(true);
-            disable_decrease.SetActive(true);
+            disable_increase.interactable = true;
+            disable_decrease.interactable = true;
             Reveal.SetActive(false);
         }
         else
@@ -204,8 +203,8 @@ public class Gamemanager : MonoBehaviour
                 Alert_top.text = "WARNING";
                 Alert_bottom.text = "NOT ENOUGH BALANCE!";
                 disable_Play.SetActive(true);
-                disable_increase.SetActive(true);
-                disable_decrease.SetActive(true);
+                disable_increase.interactable = true;
+                disable_decrease.interactable = true;
                 Reveal.SetActive(false);
             }
         }
@@ -225,8 +224,8 @@ public class Gamemanager : MonoBehaviour
             Alert_top.text = "ERROR";
             Alert_bottom.text = "CANNOT FIND SERVER!";
             disable_Play.SetActive(true);
-            disable_increase.SetActive(true);
-            disable_decrease.SetActive(true);
+            disable_increase.interactable = true;
+            disable_decrease.interactable = true;
             Reveal.SetActive(false);
         }
         else
@@ -265,8 +264,8 @@ public class Gamemanager : MonoBehaviour
                 Alert_top.text = "ERROR";
                 Alert_bottom.text = "BET ERROR!";
                 disable_Play.SetActive(true);
-                disable_increase.SetActive(true);
-                disable_decrease.SetActive(true);
+                disable_increase.interactable = true;
+                disable_decrease.interactable = true;
                 Reveal.SetActive(false);
             }
             else if (apiform.Message == "SERVER ERROR!")
@@ -276,8 +275,8 @@ public class Gamemanager : MonoBehaviour
                 Alert_top.text = "ERROR";
                 Alert_bottom.text = "SERVER ERROR!";
                 disable_Play.SetActive(true);
-                disable_increase.SetActive(true);
-                disable_decrease.SetActive(true);
+                disable_increase.interactable = true;
+                disable_decrease.interactable = true;
                 Reveal.SetActive(false);
             }
         }
@@ -287,8 +286,8 @@ public class Gamemanager : MonoBehaviour
         if (isbutton)
         {
             isbutton = false;
-            StartCoroutine(_handleClickNumber(index));
             RandomNumber.Remove(index);
+            StartCoroutine(_handleClickNumber(index));
         }
     }
     IEnumerator _handleClickNumber(int index, string str = "")
@@ -298,17 +297,16 @@ public class Gamemanager : MonoBehaviour
         question_button[index].SetActive(false);
         if (apiform.NumbersArray[isNumber] == 11)
         {
-            B_number[index].GetComponent<RawImage>().texture = R_number[8];
+            B_number[index].GetComponent<RawImage>().texture = W_number[8];
         }
         else
         {
-            B_number[index].GetComponent<RawImage>().texture = R_number[apiform.NumbersArray[isNumber]];
+            B_number[index].GetComponent<RawImage>().texture = W_number[apiform.NumbersArray[isNumber]];
         }
 
         switch (isNumber)
         {
             case 0:
-                prize_1[0].SetActive(false);
                 prize_2[0].SetActive(true);
                 break;
             case 2:
@@ -323,7 +321,6 @@ public class Gamemanager : MonoBehaviour
                 }
                 break;
             case 3:
-                prize_1[1].SetActive(false);
                 prize_2[1].SetActive(true);
                 break;
             case 5:
@@ -338,7 +335,6 @@ public class Gamemanager : MonoBehaviour
                 }
                 break;
             case 6:
-                prize_1[2].SetActive(false);
                 prize_2[2].SetActive(true);
                 break;
             case 8:
@@ -362,6 +358,7 @@ public class Gamemanager : MonoBehaviour
         }
         if (isNumber >= 9)
         {
+            yield return new WaitForSeconds(0.5f);
             if (apiform.earnAmount > 0.0f)
             {
                 totalAmount += apiform.earnAmount - betAmount;
@@ -381,8 +378,8 @@ public class Gamemanager : MonoBehaviour
                 Alert_bottom.text = "0.00";
             }
             disable_Play.SetActive(true);
-            disable_increase.SetActive(true);
-            disable_decrease.SetActive(true);
+            disable_increase.interactable = true;
+            disable_decrease.interactable = true;
             Reveal.SetActive(false);
             isNumber = 0;
         }
@@ -410,7 +407,6 @@ public class Gamemanager : MonoBehaviour
                 StartCoroutine(_handleClickNumber(RandomNumber[rnd], "Reveal"));
                 RandomNumber.RemoveAt(rnd);
             }
-
         }
     }
 }
