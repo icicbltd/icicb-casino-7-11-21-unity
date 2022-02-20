@@ -48,7 +48,7 @@ public class Gamemanager : MonoBehaviour
     private string BaseUrl = "http://153.92.214.184:443";
     void Start()
     {
-        betAmount = 0.10f;
+        betAmount = 10f;
         BetAmount.text = betAmount.ToString("F2");
         _player = new BetPlayer();
         for (int i = 0; i < 9; i++)
@@ -73,37 +73,7 @@ public class Gamemanager : MonoBehaviour
     public void Increase()
     {
         betAmount = float.Parse(BetAmount.text);
-        if (betAmount < 1)
-        {
-            if (totalAmount >= betAmount + 0.1f)
-            {
-                betAmount += 0.1f;
-                BetAmount.text = betAmount.ToString("F2");
-            }
-            else
-            {
-                Alert_top.text = "";
-                Alert_bottom.text = "";
-                Alert_top.text = "WARNING";
-                Alert_bottom.text = "NOT ENOUGH BALANCE!";
-            }
-        }
-        else if (betAmount >= 1 && betAmount < 10)
-        {
-            if (totalAmount >= betAmount + 1f)
-            {
-                betAmount += 1f;
-                BetAmount.text = betAmount.ToString("F2");
-            }
-            else
-            {
-                Alert_top.text = "";
-                Alert_bottom.text = "";
-                Alert_top.text = "WARNING";
-                Alert_bottom.text = "NOT ENOUGH BALANCE!";
-            }
-        }
-        else if (betAmount >= 10)
+        if (betAmount >= 10f)
         {
             if (totalAmount >= betAmount + 10f && betAmount < 100f)
             {
@@ -135,23 +105,13 @@ public class Gamemanager : MonoBehaviour
             betAmount -= 10f;
             BetAmount.text = betAmount.ToString("F2");
         }
-        else if (betAmount <= 10 && betAmount > 1)
-        {
-            betAmount -= 1f;
-            BetAmount.text = betAmount.ToString("F2");
-        }
-        else if (betAmount <= 1 && betAmount > 0.1f)
-        {
-            betAmount -= 0.1f;
-            BetAmount.text = betAmount.ToString("F2");
-        }
         else
         {
-            betAmount = 0.10f;
+            betAmount = 10f;
             Alert_top.text = "";
             Alert_bottom.text = "";
             Alert_top.text = "MINIMUM BET LIMIT";
-            Alert_bottom.text = "0.10";
+            Alert_bottom.text = "10.00";
         }
     }
     public void Play()
